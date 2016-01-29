@@ -140,6 +140,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 391555933}
   - 65: {fileID: 391555932}
+  - 114: {fileID: 391555934}
   m_Layer: 0
   m_Name: vaultCollider1
   m_TagString: Untagged
@@ -154,7 +155,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 391555931}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -171,6 +172,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!114 &391555934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 391555931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c548b93d81e7241bef7a385caed279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &798310077
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +315,10 @@ Prefab:
     - target: {fileID: 182680, guid: 0ed3d3b091bbc8947b286c2b2835cbb3, type: 2}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6160196, guid: 0ed3d3b091bbc8947b286c2b2835cbb3, type: 2}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0ed3d3b091bbc8947b286c2b2835cbb3, type: 2}

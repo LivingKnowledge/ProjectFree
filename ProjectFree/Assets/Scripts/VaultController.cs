@@ -17,10 +17,15 @@ public class VaultController : MonoBehaviour
         box2 = GetComponent<BoxCollider2D>();
     }
 
+    void OnTriggerEnter( Collision collider )
+    {
+        Debug.Log( "OnTriggerEnter" );
+    }
+
 
     void OnCollisionEnter(Collision collider)
     {
-        
+        Debug.Log( "OnTriggerEnter" );
     }
 
 }
