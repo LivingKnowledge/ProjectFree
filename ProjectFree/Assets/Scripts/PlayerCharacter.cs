@@ -7,6 +7,13 @@ public class PlayerCharacter : MonoBehaviour
     public float jumpForce;
     public float climbSpeed;
 
+    //carmer
+    public float zoomSpeed = 1;
+    public float targetOrtho;
+    public float smoothSpeed = 2.0f;
+    public float minOrtho;
+    public float maxOrtho;
+
     private Rigidbody2D myRigidBody;
 
     public bool isGrounded;
@@ -40,11 +47,17 @@ public class PlayerCharacter : MonoBehaviour
 
         myRigidBody.velocity = new Vector2(moveSpeed, myRigidBody.velocity.y);
 
+        if(moveSpeed < 10)
+        {
+            moveSpeed += 1 * Time.deltaTime;
+        }
+        
         if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0))
         {
             if(isGrounded == true)
             {
                 myRigidBody.velocity = new Vector2(myRigidBody.velocity.x, jumpForce);
+                moveSpeed -= 2;
             }
         }
 
@@ -66,6 +79,15 @@ public class PlayerCharacter : MonoBehaviour
         myAnimator.SetFloat("Speed", myRigidBody.velocity.x);
         myAnimator.SetBool("isGrounded", isGrounded);
 
+        if( moveSpeed > 10 )
+        {
+            targetOrtho = zoomSpeed;
+            targetOrtho = Mathf.Clamp( targetOrtho, maxOrtho, minOrtho );
+            Camera.main.orthographicSize = Mathf.MoveTowards( Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime );
+        }
+
+       
+
 	}
 
     void HandleWallClimbing()
@@ -79,4 +101,5 @@ public class PlayerCharacter : MonoBehaviour
             //myRigidBody.AddForce(new Vector2())
         }
     }
+
 }

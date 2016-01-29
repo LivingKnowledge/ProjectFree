@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VaultController : MonoBehaviour {
+public class VaultController : MonoBehaviour
+{
+    PlayerCharacter player;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    BoxCollider2D box1;
+    BoxCollider2D box2;
+
+    private float time;
+    private float height;
+
+    void Start()
+    {
+        box1 = GetComponent<BoxCollider2D>();
+        box2 = GetComponent<BoxCollider2D>();
+    }
+
+
+    void OnCollisionEnter(Collision collider)
+    {
+        
+    }
+
 }
