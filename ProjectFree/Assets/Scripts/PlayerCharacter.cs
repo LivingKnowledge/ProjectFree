@@ -5,11 +5,19 @@ public class PlayerCharacter : MonoBehaviour
 {
     public float moveSpeed;
     public float jumpForce;
+    public float climbSpeed;
 
     private Rigidbody2D myRigidBody;
 
     public bool isGrounded;
+    public bool isClimbing;
+    public bool wallCheck;
+    public bool facingRight = true;
+
     public LayerMask whatisGround;
+    public LayerMask whatisWall;
+
+    public Transform wallCheckPoint;
 
     private Collider2D mycollider;
 
@@ -40,8 +48,35 @@ public class PlayerCharacter : MonoBehaviour
             }
         }
 
+        if(!isGrounded)
+        {
+            wallCheck = Physics2D.OverlapCircle(wallCheckPoint.position, 0.1f, whatisWall);
+
+            if(facingRight)
+            {
+                if(wallCheck)
+                {
+                    HandleWallClimbing();
+                }
+            }
+        }
+
+
+
         myAnimator.SetFloat("Speed", myRigidBody.velocity.x);
         myAnimator.SetBool("isGrounded", isGrounded);
 
 	}
+
+    void HandleWallClimbing()
+    {
+        myRigidBody.velocity = new Vector2(0, climbSpeed);
+
+        isClimbing = true;
+
+        if(facingRight)
+        {
+            //myRigidBody.AddForce(new Vector2())
+        }
+    }
 }
