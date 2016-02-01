@@ -3,22 +3,26 @@ using System.Collections;
 
 public class PlayerCharacter : MonoBehaviour
 {
-    public float moveSpeed;
-    public float jumpForce;
-    public float climbSpeed;
 
     //carmer
     public float zoomSpeed = 1;
     public float targetOrtho;
     public float smoothSpeed = 2.0f;
-    public float minOrtho;
-    public float maxOrtho;
+    public float minOrtho = 20;
+    public float maxOrtho = 100;
 
-    private Rigidbody2D myRigidBody;
 
-    public bool isGrounded;
-    public bool isClimbing;
-    public bool wallCheck;
+    public float moveSpeed;
+    public float jumpForce;
+    public float climbSpeed;
+    private float originalSpeed;
+
+
+    private Rigidbody myRigidBody;
+
+    public bool isGrounded = false;
+    public bool isClimbing = false;
+    public bool wallCheck = false;
     public bool facingRight = true;
 
     public LayerMask whatisGround;
@@ -26,80 +30,102 @@ public class PlayerCharacter : MonoBehaviour
 
     public Transform wallCheckPoint;
 
-    private Collider2D mycollider;
+    private Collider mycollider;
 
     private Animator myAnimator;
 
-    // Use this for initialization
-    void Start ()
+    void OnCollisionEnter(Collision col)
     {
-        myRigidBody = GetComponent<Rigidbody2D>();
-
-        mycollider = GetComponent<Collider2D>();
-
-        myAnimator = GetComponent<Animator>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        isGrounded = Physics2D.IsTouchingLayers(mycollider, whatisGround);
-
-        myRigidBody.velocity = new Vector2(moveSpeed, myRigidBody.velocity.y);
-
-        if(moveSpeed < 10)
+     
+        if (col.gameObject.tag == "Ground")
         {
-            moveSpeed += 1 * Time.deltaTime;
+            isGrounded = true;
+            Debug.LogWarning("Ground hit?");
+
+        }
+        else if (col.gameObject.tag == "Wall")
+        {
+            isClimbing = true;
+            Debug.LogWarning("Wall Hit?");
         }
         
-        if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0))
+    }
+
+    void OnCollisionExit(Collision col)
+    {
+        isClimbing = false;
+    }
+    // Use this for initialization
+    void Start()
+    {
+        myRigidBody = GetComponent<Rigidbody>();
+        originalSpeed = moveSpeed;
+
+        mycollider = GetComponent<Collider>();
+
+        myAnimator = GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+        if(moveSpeed < 10)
         {
-            if(isGrounded == true)
+            moveSpeed+=2 * Time.deltaTime;
+
+        }
+        //moveSpeed *= Time.deltaTime;
+        myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y);
+
+        if (isGrounded)
+        {
+            HandleJumping();
+            
+        }
+        else if (isClimbing && !isGrounded)
+        {
+            moveSpeed = originalSpeed;
+            HandleWallClimbing();
+        }
+     
+
+            if (moveSpeed > 7 && moveSpeed < 10)
             {
-                myRigidBody.velocity = new Vector2(myRigidBody.velocity.x, jumpForce);
-                moveSpeed -= 2;
+                targetOrtho = zoomSpeed;
+                targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
+                Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
+                
+                //if(isClimbing)
+                //{
+                //
+                //    targetOrtho = zoomSpeed;
+                //    targetOrtho = Mathf.Clamp(-targetOrtho, minOrtho, maxOrtho);
+                //    Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
+                //}
             }
-        }
-
-        if(!isGrounded)
-        {
-            wallCheck = Physics2D.OverlapCircle(wallCheckPoint.position, 0.1f, whatisWall);
-
-            if(facingRight)
-            {
-                if(wallCheck)
-                {
-                    HandleWallClimbing();
-                }
-            }
-        }
 
 
+    }
 
-        myAnimator.SetFloat("Speed", myRigidBody.velocity.x);
-        myAnimator.SetBool("isGrounded", isGrounded);
-
-        if( moveSpeed > 10 )
-        {
-            targetOrtho = zoomSpeed;
-            targetOrtho = Mathf.Clamp( targetOrtho, maxOrtho, minOrtho );
-            Camera.main.orthographicSize = Mathf.MoveTowards( Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime );
-        }
-
-       
-
-	}
 
     void HandleWallClimbing()
     {
-        myRigidBody.velocity = new Vector2(0, climbSpeed);
+        myRigidBody.velocity = new Vector3(0, climbSpeed);
+        //isClimbing = false;
+        //isGrounded = true;
+    }
 
-        isClimbing = true;
-
-        if(facingRight)
+    void HandleJumping()
+    {
+        if (Input.GetButtonDown("Jump"))
         {
-            //myRigidBody.AddForce(new Vector2())
+
+            myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
+            isGrounded = false;
         }
     }
+
+    
 
 }

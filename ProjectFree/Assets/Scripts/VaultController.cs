@@ -3,29 +3,23 @@ using System.Collections;
 
 public class VaultController : MonoBehaviour
 {
-    PlayerCharacter player;
-
-    BoxCollider2D box1;
-    BoxCollider2D box2;
-
-    private float time;
-    private float height;
-
+    public float time;
+    public float newVeclocity;
+    
     void Start()
     {
-        box1 = GetComponent<BoxCollider2D>();
-        box2 = GetComponent<BoxCollider2D>();
+       
     }
 
-    void OnTriggerEnter( Collision collider )
+    void OnTriggerEnter( Collider col )
     {
-        Debug.Log( "OnTriggerEnter" );
+       
     }
 
 
     void OnCollisionEnter(Collision collider)
     {
-        Debug.Log( "OnTriggerEnter" );
+        Debug.LogWarning("Collison apparent!");
     }
 
 }
