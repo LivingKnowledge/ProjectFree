@@ -17,22 +17,13 @@ public class PlayerCharacter : MonoBehaviour
     public float climbSpeed;
     private float originalSpeed;
 
-
+    public static Rigidbody vaultVariables;
     private Rigidbody myRigidBody;
 
     public bool isGrounded = false;
     public bool isClimbing = false;
-    public bool wallCheck = false;
     public bool facingRight = true;
 
-    public LayerMask whatisGround;
-    public LayerMask whatisWall;
-
-    public Transform wallCheckPoint;
-
-    private Collider mycollider;
-
-    private Animator myAnimator;
 
     void OnCollisionEnter(Collision col)
     {
@@ -61,9 +52,11 @@ public class PlayerCharacter : MonoBehaviour
         myRigidBody = GetComponent<Rigidbody>();
         originalSpeed = moveSpeed;
 
-        mycollider = GetComponent<Collider>();
+        if(vaultVariables == null)
+        {
+            vaultVariables = GetComponent<Rigidbody>();
+        }
 
-        myAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -124,6 +117,11 @@ public class PlayerCharacter : MonoBehaviour
             myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
             isGrounded = false;
         }
+    }
+
+    public static void GetvaultSpeed()
+    {
+
     }
 
     
