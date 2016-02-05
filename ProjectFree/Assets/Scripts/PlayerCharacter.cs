@@ -56,28 +56,18 @@ public class PlayerCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(canMove)
-        {
-            HandleSpeed();
-        }
-        if (!vaultTrigger.Grounded())
+
+        if( canMove == true && !inAir )
         {
             HandleJumping();
 
         }
 
+        if(wallTrigger.Climbing())
+        {
+
             HandleWallClimbing();
-
-            
-
-
-        //if (moveSpeed > 7 && moveSpeed < 10)
-        //{
-        //    targetOrtho = zoomSpeed;
-        //    targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
-        //    Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
-        //   
-        //}
+        }
 
     }
 
@@ -89,7 +79,7 @@ public class PlayerCharacter : MonoBehaviour
     void HandleWallClimbing()
     {
         //if(startTrigger.Climbing())
-        if(wallTrigger.Climbing())
+        //if(wallTrigger.isClimbing())
         {
             myRigidBody.velocity = new Vector3(0, climbSpeed, 0);
             myTransform.Translate(new Vector3(0, 
