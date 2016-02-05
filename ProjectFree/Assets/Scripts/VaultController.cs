@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using SP_PhysUtilites;
+using SP_PhysicsUtils;
 
 public class VaultController : MonoBehaviour
 {
@@ -45,7 +45,7 @@ public class VaultController : MonoBehaviour
                 Vector3 playerPos = player.GetPos();
 
 
-                float timeforvault = PhysicsUtilities.TimeItTakesToVault
+                float timeforvault = PhysicsUtilities.TimeToReachDistAtVel
                     (playerPos.x, vaultStart.position.x, playervel.x);
                 print("Time for vault distance : " + timeforvault);
 

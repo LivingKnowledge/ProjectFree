@@ -20,6 +20,6 @@ public class VaultManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-	
+	    
 	}
 }
