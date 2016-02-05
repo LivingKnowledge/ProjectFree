@@ -16,114 +16,140 @@ public class PlayerCharacter : MonoBehaviour
     public float jumpForce;
     public float climbSpeed;
     private float originalSpeed;
+    public float vaultspeed;
 
     public static Rigidbody vaultVariables;
     private Rigidbody myRigidBody;
+    public TriggerInfo startTrigger;
+    Transform myTransform;
 
-    public bool isGrounded = false;
-    public bool isClimbing = false;
-    public bool facingRight = true;
+    public bool canMove = true;
 
-
-    void OnCollisionEnter(Collision col)
+    void FixedUpdate()
     {
-     
-        if (col.gameObject.tag == "Ground")
-        {
-            isGrounded = true;
-            Debug.LogWarning("Ground hit?");
 
-        }
-        else if (col.gameObject.tag == "Wall")
-        {
-            isClimbing = true;
-            Debug.LogWarning("Wall Hit?");
-        }
+       ///CheckMaxSpeed();
         
+       if(canMove)
+       {
+           HandleSpeed();
+       }
+
+
     }
 
-    void OnCollisionExit(Collision col)
+    void Awake()
     {
-        isClimbing = false;
+        myRigidBody = GetComponent<Rigidbody>();
+        myTransform = GetComponent<Transform>();
     }
+
+
     // Use this for initialization
     void Start()
     {
-        myRigidBody = GetComponent<Rigidbody>();
-        originalSpeed = moveSpeed;
-
-        if(vaultVariables == null)
-        {
-            vaultVariables = GetComponent<Rigidbody>();
-        }
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if(moveSpeed < 10)
+        if(canMove)
         {
-            moveSpeed+=2 * Time.deltaTime;
+            HandleSpeed();
 
-        }
-        //moveSpeed *= Time.deltaTime;
-        myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y);
-
-        if (isGrounded)
-        {
             HandleJumping();
+
+            HandleWallClimbing();
+
             
         }
-        else if (isClimbing && !isGrounded)
+
+
+        if (moveSpeed > 7 && moveSpeed < 10)
         {
-            moveSpeed = originalSpeed;
-            HandleWallClimbing();
+            targetOrtho = zoomSpeed;
+            targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
+            Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
+           
         }
-     
-
-            if (moveSpeed > 7 && moveSpeed < 10)
-            {
-                targetOrtho = zoomSpeed;
-                targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
-                Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
-                
-                //if(isClimbing)
-                //{
-                //
-                //    targetOrtho = zoomSpeed;
-                //    targetOrtho = Mathf.Clamp(-targetOrtho, minOrtho, maxOrtho);
-                //    Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
-                //}
-            }
-
 
     }
 
+    public void RestrictMovement(bool on)
+    {
+        canMove = on;
+    }
 
     void HandleWallClimbing()
     {
-        myRigidBody.velocity = new Vector3(0, climbSpeed);
-        //isClimbing = false;
+        //if(startTrigger.Climbing())
+        if(startTrigger.Climbing())
+        {
+            myRigidBody.velocity = new Vector3(0, climbSpeed);
+            //startTrigger.SetIsClimbing(true);
+        }
         //isGrounded = true;
     }
 
     void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump"))
+        //if (startTrigger.Grounded());
+        if(startTrigger.Grounded())
         {
-
-            myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
-            isGrounded = false;
+            if (Input.GetButtonDown("Jump"))
+            {
+                myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
+                //startTrigger.SetIsGrounded(false);
+            }
         }
     }
 
-    public static void GetvaultSpeed()
+    void HandleSpeed()
     {
-
+        //if(startTrigger.Grounded())
+        //myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y);
+        //myTransform.Translate (new Vector3(moveSpeed, myRigidBody.velocity.y, 0));
+        myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
+        myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
+            myRigidBody.velocity.y * Time.deltaTime, 0));
     }
 
+    void CheckMaxSpeed()
+    {
+        if (moveSpeed < 10)
+        {
+            moveSpeed++;
+
+        }
+    }
+
+    public void HaultPhysicsBody()
+    {
+        myRigidBody.velocity = Vector3.zero;
+    }
+
+    public Vector3 GetPlayerVelocity()
+    {
+        return myRigidBody.velocity;
+    }
+
+    public Vector3 GetPos()
+    {
+        return myTransform.position;
+    }
+
+    public void SetVelocity(Vector3 vel)
+    {
+        myRigidBody.velocity = vel;
+    }
+
+    public float GetVaultSpeed()
+    {
+        return vaultspeed;
+    }
+
+    
     
 
 }

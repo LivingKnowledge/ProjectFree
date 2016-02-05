@@ -1,86 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SP_PhysicsUtils;
 
 public class VaultController : MonoBehaviour
 {
-    private float time;
-    private float vFinal;
-    private float vStart;
-    private float velocityI;
-    private float velocityF;
-    private float denom;
-    private float quadratic;
-    public float a;
-    public float b1;
-    public float b2;
-    public float c;
-    private float acceleration = Physics.gravity.y;
+    public Transform vaultStart;
+    public Transform vaultEnd;
 
-    public GameObject vaultStart;
-    public GameObject vaultEnd;
-    public GameObject player;
+    public TriggerInfo startTrigger;
+    public PlayerCharacter player;
+
+    public bool runningvault = false;
 
 
     //private static PlayerCharacter player;
-    public Rigidbody myRigidbody;
+    Rigidbody myRigidbody;
 
+    public void Initialize(PlayerCharacter pl)
+    {
+        player = pl;
+    } 
 
     void Start()
     {
-        if(player == null)
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
-
-
-        if(vaultStart == null)
-        {
-            vaultStart = GameObject.FindGameObjectWithTag("VaultStart");
-
-        }
-
-        if (vaultEnd == null)
-        {
-            vaultEnd = GameObject.FindGameObjectWithTag("VaultStart");
-
-        }
 
     }
 
-    void OnTriggerEnter( Collider col )
+    void Update()
     {
-        myRigidbody = col.GetComponent<Rigidbody>();
-        
-        vStart = vaultStart.transform.position.x;
-        vFinal = vaultEnd.transform.position.x;
-        velocityI = myRigidbody.velocity.x;
+        if (!runningvault)
+            if (startTrigger.Grounded())
+            {
+                runningvault = true;
+                // startTrigger.SetIsVaulting(true);
+                player.RestrictMovement(false);
+                Vector3 playervel =  player.GetPlayerVelocity();
+                print("Players velocity into vault : " + playervel);
+                //player.HaultPhysicsBody();
 
-        a = 0.5f * acceleration * vStart;
-        b1 = velocityI * velocityI;
-        b2 = -velocityI;
-        c = vStart;
-        denom = 1 / (2 * 0.5f * acceleration);
-        quadratic = Mathf.Sqrt(b1 - 4 * a) * denom;
+                Vector3 playerPos = player.GetPos();
 
-        time = quadratic;
-        
-            
-        velocityF = velocityI + acceleration * time;
-        
 
-        myRigidbody.velocity = new Vector3(0, 0);
+                float timeforvault = PhysicsUtilities.TimeToReachDistAtVel
+                    (playerPos.x, vaultStart.position.x, playervel.x);
+                print("Time for vault distance : " + timeforvault);
 
-        Debug.LogWarning("Collision apparent!");
+                //Yf = Y0 + Vo0(T) + (0.5f)(A)(T * T)
+                //Yf = Y0 + Vo0(T) + (0.5f)(A)(T)
+
+                float a = (0.5f) * (-9.8f) * (timeforvault * timeforvault);
+                float denom = 1f / timeforvault;
+                float Yf = vaultEnd.position.y;
+                float Y0 = playerPos.y - 2f;
+                float finalYvelforvault = (-(Y0 - Yf) + a) / timeforvault;
+
+                startTrigger.SetGround(false);
+
+                player.SetVelocity(new Vector3(playervel.x, finalYvelforvault, playervel.z));
+               
+
+                StartCoroutine(enumWaitTillFinishedVault(timeforvault));
+
+            }
+
     }
 
-    void OnTriggerExit(Collider col)
+    IEnumerator enumWaitTillFinishedVault(float time)
     {
-        Debug.LogWarning("Collision Exited!");
+        print("start wait");
+        yield return new WaitForSeconds(time + 0.5f);
+        print("end wait");
+        player.RestrictMovement(true);
+        runningvault = false;
     }
 
-    void OnCollisionEnter(Collision collider)
-    {
-        Debug.LogWarning("Collison apparent!");
-    }
+   
 
 }
