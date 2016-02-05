@@ -4,6 +4,9 @@ using SP_PhysicsUtils;
 
 public class VaultController : MonoBehaviour
 {
+    [Range(0.0f, 5.0f)]
+    public float vaultTime;
+
     public Transform vaultStart;
     public Transform vaultEnd;
 
@@ -11,6 +14,7 @@ public class VaultController : MonoBehaviour
     public PlayerCharacter player;
 
     public bool runningvault = false;
+
 
 
     //private static PlayerCharacter player;
@@ -56,7 +60,7 @@ public class VaultController : MonoBehaviour
 
                 startTrigger.SetGround(false);
 
-                player.SetVelocity(new Vector3(playervel.x, finalYvelforvault, playervel.z));
+                player.SetVelocity(new Vector3(playervel.x * player.GetVaultSpeed(), finalYvelforvault * vaultTime, playervel.z));
                
 
                 StartCoroutine(enumWaitTillFinishedVault(timeforvault));

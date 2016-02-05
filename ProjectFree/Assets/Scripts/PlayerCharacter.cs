@@ -20,10 +20,12 @@ public class PlayerCharacter : MonoBehaviour
 
     public static Rigidbody vaultVariables;
     private Rigidbody myRigidBody;
-    public TriggerInfo startTrigger;
+    public TriggerInfo vaultTrigger;
+    public TriggerInfo wallTrigger;
     Transform myTransform;
 
     public bool canMove = true;
+    public bool inAir = false;
 
     void FixedUpdate()
     {
@@ -57,13 +59,16 @@ public class PlayerCharacter : MonoBehaviour
         if(canMove)
         {
             HandleSpeed();
-
+        }
+        if (!vaultTrigger.Grounded())
+        {
             HandleJumping();
+
+        }
 
             HandleWallClimbing();
 
             
-        }
 
 
         if (moveSpeed > 7 && moveSpeed < 10)
@@ -84,10 +89,12 @@ public class PlayerCharacter : MonoBehaviour
     void HandleWallClimbing()
     {
         //if(startTrigger.Climbing())
-        if(startTrigger.Climbing())
+        if(wallTrigger.Climbing())
         {
-            myRigidBody.velocity = new Vector3(0, climbSpeed);
-            //startTrigger.SetIsClimbing(true);
+            myRigidBody.velocity = new Vector3(0, climbSpeed, 0);
+            myTransform.Translate(new Vector3(0, 
+                myRigidBody.velocity.y * Time.deltaTime, 0));
+            
         }
         //isGrounded = true;
     }
@@ -95,12 +102,16 @@ public class PlayerCharacter : MonoBehaviour
     void HandleJumping()
     {
         //if (startTrigger.Grounded());
-        if(startTrigger.Grounded())
+        //if(startTrigger.Grounded() == false && !inAir)
         {
             if (Input.GetButtonDown("Jump"))
             {
-                myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
+                //myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
                 //startTrigger.SetIsGrounded(false);
+                myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
+                myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, myRigidBody.velocity.y * Time.deltaTime, 0));
+                //startTrigger.SetGround(false);
+                inAir = true;
             }
         }
     }
