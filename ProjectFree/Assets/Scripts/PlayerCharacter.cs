@@ -71,13 +71,13 @@ public class PlayerCharacter : MonoBehaviour
             
 
 
-        if (moveSpeed > 7 && moveSpeed < 10)
-        {
-            targetOrtho = zoomSpeed;
-            targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
-            Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
-           
-        }
+        //if (moveSpeed > 7 && moveSpeed < 10)
+        //{
+        //    targetOrtho = zoomSpeed;
+        //    targetOrtho = Mathf.Clamp(targetOrtho, maxOrtho, minOrtho);
+        //    Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed * Time.deltaTime);
+        //   
+        //}
 
     }
 
