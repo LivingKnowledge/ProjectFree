@@ -18,7 +18,6 @@ public class PlayerCharacter : MonoBehaviour
     private float originalSpeed;
     public float vaultspeed;
 
-    public static Rigidbody vaultVariables;
     private Rigidbody myRigidBody;
     public TriggerInfo vaultTrigger;
     public TriggerInfo wallTrigger;

@@ -4,7 +4,7 @@ using System.Collections;
 public class TriggerInfo : MonoBehaviour
 {
     public bool isGrounded = false;
-    public bool isClimbing = false;
+   
 
     void FixedUpdate()
     {
@@ -14,7 +14,7 @@ public class TriggerInfo : MonoBehaviour
     void OnTriggerEnter()
     {
         isGrounded = false;
-        //isClimbing = true;
+       
     }
 
     void OnTriggerStay()
@@ -26,13 +26,13 @@ public class TriggerInfo : MonoBehaviour
     void OnCollisionEnter()
     {
         //isGrounded = true;
-        isClimbing = true;
+       
      
     }
 
     void OnCollisionExit()
     {
-        isClimbing = false;
+      
     }
 
     public bool Grounded()
@@ -45,10 +45,7 @@ public class TriggerInfo : MonoBehaviour
         isGrounded = bol;
     }
 
-    public bool Climbing()
-    {
-        return isClimbing;
-    }
+
     
     
 }
