@@ -46,9 +46,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\PhysicsUtilities.cs" />
      <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
+     <Compile Include="Assets\Scripts\TriggerInfo.cs" />
      <Compile Include="Assets\Scripts\VaultController.cs" />
      <Compile Include="Assets\Scripts\VaultManager.cs" />
+     <Compile Include="Assets\Scripts\WallController.cs" />
+     <Compile Include="Assets\Scripts\WallManager.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

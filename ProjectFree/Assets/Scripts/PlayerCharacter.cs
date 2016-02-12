@@ -63,12 +63,6 @@ public class PlayerCharacter : MonoBehaviour
 
         }
 
-        if(wallTrigger.Climbing())
-        {
-
-            HandleWallClimbing();
-        }
-
     }
 
     public void RestrictMovement(bool on)
@@ -76,18 +70,6 @@ public class PlayerCharacter : MonoBehaviour
         canMove = on;
     }
 
-    void HandleWallClimbing()
-    {
-        //if(startTrigger.Climbing())
-        //if(wallTrigger.isClimbing())
-        {
-            myRigidBody.velocity = new Vector3(0, climbSpeed, 0);
-            myTransform.Translate(new Vector3(0, 
-                myRigidBody.velocity.y * Time.deltaTime, 0));
-            
-        }
-        //isGrounded = true;
-    }
 
     void HandleJumping()
     {
@@ -148,6 +130,11 @@ public class PlayerCharacter : MonoBehaviour
     public float GetVaultSpeed()
     {
         return vaultspeed;
+    }
+
+    public float GetClimbSpeed()
+    {
+        return climbSpeed;
     }
 
     
