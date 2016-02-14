@@ -274,6 +274,14 @@ Prefab:
       propertyPath: vaultTrigger
       value: 
       objectReference: {fileID: 293294957}
+    - target: {fileID: 106130, guid: d28bf0736c1397c458a9feddce3de16f, type: 2}
+      propertyPath: m_TagString
+      value: MainCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 11429204, guid: d28bf0736c1397c458a9feddce3de16f, type: 2}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d28bf0736c1397c458a9feddce3de16f, type: 2}
   m_IsPrefabParent: 0
@@ -473,6 +481,27 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e55a4ba4583118f4c91f5946629d4b5e, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1152314977 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 106130, guid: d28bf0736c1397c458a9feddce3de16f, type: 2}
+  m_PrefabInternal: {fileID: 485204787}
+--- !u!114 &1152314983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1152314977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a616072f9d671f74d8bd3708988dc53d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 363640760}
+  zoomSpeed: 1
+  targetOrtho: 0
+  smoothSpeed: 2
+  minOrtho: 7
+  maxOrtho: 15
 --- !u!1001 &1210734315
 Prefab:
   m_ObjectHideFlags: 0

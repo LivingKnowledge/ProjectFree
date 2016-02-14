@@ -3,15 +3,6 @@ using System.Collections;
 
 public class PlayerCharacter : MonoBehaviour
 {
-
-    //carmer
-    public float zoomSpeed = 1;
-    public float targetOrtho;
-    public float smoothSpeed = 2.0f;
-    public float minOrtho = 20;
-    public float maxOrtho = 100;
-
-
     public float moveSpeed;
     public float jumpForce;
     public float climbSpeed;
@@ -29,7 +20,7 @@ public class PlayerCharacter : MonoBehaviour
     void FixedUpdate()
     {
 
-       ///CheckMaxSpeed();
+       CheckMaxSpeed();
         
        if(canMove)
        {
@@ -101,7 +92,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (moveSpeed < 10)
         {
-            moveSpeed++;
+            moveSpeed+= Time.deltaTime;
 
         }
     }

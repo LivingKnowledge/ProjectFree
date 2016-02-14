@@ -23,12 +23,16 @@ public class CameraController : MonoBehaviour
     {
         var playervel = mybody.velocity.x;
 
-        if(playervel > 7)
+        if( playervel > 7 )
         {
-            targetOrtho = zoomSpeed;
-            targetOrtho = Mathf.Clamp( targetOrtho, minOrtho, maxOrtho );
+            targetOrtho = maxOrtho;
+        }
+        else
+        {
+            targetOrtho = minOrtho;
         }
 
+        Camera.main.fieldOfView = Mathf.Lerp( Camera.main.fieldOfView, targetOrtho, zoomSpeed * Time.deltaTime );
 
     }
 }
