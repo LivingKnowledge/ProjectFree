@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SP_PhysicsUtils;
 
 public class WallController : MonoBehaviour 
 {
     public PlayerCharacter player;
 
     public TriggerInfo startTrigger;
+
+    public Transform startDis;
+    public Transform endDis;
+
+    float timeForclimb;
 
     public bool isClimbing = false;
 
@@ -31,15 +37,22 @@ public class WallController : MonoBehaviour
         {
             if(startTrigger.Grounded())
             {
+                float climbSpeed = player.GetClimbSpeed();
+                Vector3 playerPos = player.GetPos();
+                timeForclimb = PhysicsUtilities.TimeToReachDistAtVel
+                    ( playerPos.x, startDis.position.x, climbSpeed );
+
                 isClimbing = true;
                 Vector3 playervel = player.GetPlayerVelocity();
 
                 player.SetVelocity( new Vector3(0, player.GetClimbSpeed(),playervel.z ) );
 
+
+
             }
         }
 
-        StartCoroutine(enumWaitTillFinishedWallClimb( 0 ) );
+        StartCoroutine( enumWaitTillFinishedWallClimb( timeForclimb ) );
 
 
 	}
@@ -49,7 +62,7 @@ public class WallController : MonoBehaviour
         print( "start wait" );
         yield return new WaitForSeconds( time + 0.5f );
         print( "end wait" );
-        player.RestrictMovement( false );
+        player.RestrictMovement( true );
         isClimbing = false;
     }
 

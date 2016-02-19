@@ -44,7 +44,7 @@ public class VaultController : MonoBehaviour
                 //player.RestrictMovement(false);
                 Vector3 playervel =  player.GetPlayerVelocity();
                 print("Players velocity into vault : " + playervel);
-                //player.HaultPhysicsBody();
+                player.HaultPhysicsBody();
 
                 Vector3 playerPos = player.GetPos();
 

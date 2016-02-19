@@ -8,6 +8,7 @@ public class PlayerCharacter : MonoBehaviour
     public float climbSpeed;
     private float originalSpeed;
     public float vaultspeed;
+    public float slideSpeed;
 
     float oldRot;
 
@@ -78,13 +79,13 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleJumping()
     {
-            if (Input.GetButtonDown("Jump") && !isSliding)
-            {
-                myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
-                myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
-                    myRigidBody.velocity.y * Time.deltaTime, 0));
-                inAir = true;
-            }
+        if (Input.GetButtonDown("Jump") && !isSliding)
+        {
+            myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
+            myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
+                myRigidBody.velocity.y * Time.deltaTime, 0));
+            inAir = true;
+        }
     }
 
     void HandleSpeed()
@@ -96,28 +97,18 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleSliding()
     {
-        if (Input.GetButtonDown("Slide") && !isSliding)
+        if( Input.GetKey("down") && !isSliding )
         {
-            float rotateVal = moveSpeed;
-            //float slidespeed = moveSpeed;
-            float slidespeed = 10;
-            moveSpeed = 0;
-            float trans = Input.GetAxis("Vertical") * rotateVal;
+            myRigidBody.freezeRotation = false;
             isSliding = true;
-            RestrictMovement(false);
-            //HaultPhysicsBody();
-
-            oldRot = myTransform.localRotation.z;
-            myTransform.Rotate(new Vector3(myTransform.localRotation.x, myTransform.localRotation.y, 90.0f));
-            myRigidBody.velocity = new Vector3(0, -slidespeed, 0);
-            //myTransform.Translate(new Vector3(myRigidBody.velocity.x, myRigidBody.velocity.y, 0));
+            float v = Input.GetAxis( "Vertical" ) * slideSpeed * Time.deltaTime;
+            
+            
+            myRigidBody.AddTorque( transform.up * v );
+            //myRigidBody.freezeRotation = true;
+            //isSliding = false;
         }
-        else if(Input.GetButtonDown("unSlide") && isSliding == true)
-        {
-            isSliding = false;
-            RestrictMovement(false);
-            myTransform.Rotate(new Vector3(myTransform.localRotation.x, myTransform.localRotation.y, oldRot));
-        }
+       
 
     }
 
