@@ -9,6 +9,8 @@ public class PlayerCharacter : MonoBehaviour
     private float originalSpeed;
     public float vaultspeed;
 
+    float oldRot;
+
     private Rigidbody myRigidBody;
     public TriggerInfo vaultTrigger;
     public TriggerInfo wallTrigger;
@@ -16,6 +18,13 @@ public class PlayerCharacter : MonoBehaviour
 
     public bool canMove = true;
     public bool inAir = false;
+    public bool isSliding = false;
+
+
+    void OnCollisionEnter()
+    {
+        inAir = false;
+    }
 
     void FixedUpdate()
     {
@@ -25,6 +34,17 @@ public class PlayerCharacter : MonoBehaviour
        if(canMove)
        {
            HandleSpeed();
+       }
+
+       if (canMove == true && !inAir)
+       {
+           HandleJumping();
+
+       }
+
+       if(!isSliding && !inAir)
+       {
+           HandleSliding();
        }
 
 
@@ -47,11 +67,6 @@ public class PlayerCharacter : MonoBehaviour
     void Update()
     {
 
-        if( canMove == true && !inAir )
-        {
-            HandleJumping();
-
-        }
 
     }
 
@@ -63,34 +78,52 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleJumping()
     {
-        //if (startTrigger.Grounded());
-        //if(startTrigger.Grounded() == false && !inAir)
-        {
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && !isSliding)
             {
-                //myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce);
-                //startTrigger.SetIsGrounded(false);
                 myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
-                myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, myRigidBody.velocity.y * Time.deltaTime, 0));
-                //startTrigger.SetGround(false);
+                myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
+                    myRigidBody.velocity.y * Time.deltaTime, 0));
                 inAir = true;
             }
-        }
     }
 
     void HandleSpeed()
     {
-        //if(startTrigger.Grounded())
-        //myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y);
-        //myTransform.Translate (new Vector3(moveSpeed, myRigidBody.velocity.y, 0));
         myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
         myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
             myRigidBody.velocity.y * Time.deltaTime, 0));
     }
 
+    void HandleSliding()
+    {
+        if (Input.GetButtonDown("Slide") && !isSliding)
+        {
+            float rotateVal = moveSpeed;
+            //float slidespeed = moveSpeed;
+            float slidespeed = 10;
+            moveSpeed = 0;
+            float trans = Input.GetAxis("Vertical") * rotateVal;
+            isSliding = true;
+            RestrictMovement(false);
+            //HaultPhysicsBody();
+
+            oldRot = myTransform.localRotation.z;
+            myTransform.Rotate(new Vector3(myTransform.localRotation.x, myTransform.localRotation.y, 90.0f));
+            myRigidBody.velocity = new Vector3(0, -slidespeed, 0);
+            //myTransform.Translate(new Vector3(myRigidBody.velocity.x, myRigidBody.velocity.y, 0));
+        }
+        else if(Input.GetButtonDown("unSlide") && isSliding == true)
+        {
+            isSliding = false;
+            RestrictMovement(false);
+            myTransform.Rotate(new Vector3(myTransform.localRotation.x, myTransform.localRotation.y, oldRot));
+        }
+
+    }
+
     void CheckMaxSpeed()
     {
-        if (moveSpeed < 10)
+        if (moveSpeed < 10 && !isSliding)
         {
             moveSpeed+= Time.deltaTime;
 

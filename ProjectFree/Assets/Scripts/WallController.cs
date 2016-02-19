@@ -39,17 +39,17 @@ public class WallController : MonoBehaviour
             }
         }
 
-        StartCoroutine( enumWaitTillFinishedVault( 0 ) );
+        StartCoroutine(enumWaitTillFinishedWallClimb( 0 ) );
 
 
 	}
 
-    IEnumerator enumWaitTillFinishedVault( float time )
+    IEnumerator enumWaitTillFinishedWallClimb( float time )
     {
         print( "start wait" );
         yield return new WaitForSeconds( time + 0.5f );
         print( "end wait" );
-        player.RestrictMovement( true );
+        player.RestrictMovement( false );
         isClimbing = false;
     }
 

@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\TriggerInfo.cs" />
     <Compile Include="Assets\Scripts\VaultController.cs" />
     <Compile Include="Assets\Scripts\VaultManager.cs" />
+    <Compile Include="Assets\Scripts\WallController.cs" />
     <Compile Include="Assets\Scripts\WallManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
