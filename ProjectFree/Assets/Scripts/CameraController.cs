@@ -9,7 +9,6 @@ public class CameraController : MonoBehaviour
 
     public float zoomSpeed = 1;
     public float targetOrtho;
-    public float smoothSpeed = 2.0f;
     public float minOrtho = 7;
     public float maxOrtho = 15;
 
