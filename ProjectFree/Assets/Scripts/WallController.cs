@@ -7,9 +7,8 @@ public class WallController : MonoBehaviour
     public PlayerCharacter player;
 
     public TriggerInfo startTrigger;
-
-    public Transform startDis;
-    public Transform endDis;
+    public Transform startpoint;
+    public Transform endpoint;
 
     float timeForclimb;
 
@@ -37,22 +36,24 @@ public class WallController : MonoBehaviour
         {
             if(startTrigger.Grounded())
             {
-                float climbSpeed = player.GetClimbSpeed();
-                Vector3 playerPos = player.GetPos();
-                timeForclimb = PhysicsUtilities.TimeToReachDistAtVel
-                    ( playerPos.x, startDis.position.x, climbSpeed );
-
                 isClimbing = true;
                 Vector3 playervel = player.GetPlayerVelocity();
+                Vector3 playerpos = player.GetPos();
 
-                player.SetVelocity( new Vector3(0, player.GetClimbSpeed(),playervel.z ) );
+                player.RestrictMovement(false);
+                player.HaultPhysicsBody();
+
+                timeForclimb = PhysicsUtilities.TimeToReachDistAtVel
+                   (playerpos.x, endpoint.position.y, player.GetClimbSpeed());
+
+                player.SetVelocity( new Vector3(0, player.GetClimbSpeed() ,playervel.z ) );
 
 
+                StartCoroutine( enumWaitTillFinishedWallClimb( timeForclimb ) );
 
             }
         }
 
-        StartCoroutine( enumWaitTillFinishedWallClimb( timeForclimb ) );
 
 
 	}

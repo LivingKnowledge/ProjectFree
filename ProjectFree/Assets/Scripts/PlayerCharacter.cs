@@ -8,7 +8,7 @@ public class PlayerCharacter : MonoBehaviour
     public float climbSpeed;
     private float originalSpeed;
     public float vaultspeed;
-    public float slideSpeed;
+    public float slidespeed;
 
     float oldRot;
 
@@ -43,11 +43,15 @@ public class PlayerCharacter : MonoBehaviour
 
        }
 
-       if(!isSliding && !inAir)
-       {
-           HandleSliding();
-       }
+        if (!isSliding && !inAir)
+        {
+            HandleSlide();
+        }
 
+        if (isSliding && !inAir)
+        {
+            HandleunSlide();
+        }
 
     }
 
@@ -90,27 +94,43 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleSpeed()
     {
-        myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
-        myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
-            myRigidBody.velocity.y * Time.deltaTime, 0));
-    }
-
-    void HandleSliding()
-    {
-        if( Input.GetKey("down") && !isSliding )
+        if (isSliding)
         {
-            myRigidBody.freezeRotation = false;
-            isSliding = true;
-            float v = Input.GetAxis( "Vertical" ) * slideSpeed * Time.deltaTime;
-            
-            
-            myRigidBody.AddTorque( transform.up * v );
-            //myRigidBody.freezeRotation = true;
-            //isSliding = false;
+            myRigidBody.velocity = new Vector3(0, -slidespeed, 0);
+            myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
+                myRigidBody.velocity.y * Time.deltaTime, 0));
         }
-       
+
+
+        if (!isSliding)
+        {
+            myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
+            myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
+                myRigidBody.velocity.y * Time.deltaTime, 0));
+
+        }
 
     }
+
+    void HandleSlide()
+    {
+        if (Input.GetKey("down") && !isSliding)
+        {
+
+            isSliding = true;
+            myTransform.Rotate(Vector3.forward, 90, Space.Self);
+        }
+    }
+
+    void HandleunSlide()
+    {
+        if (Input.GetButtonDown("unSlide") && isSliding)
+        {
+            isSliding = false;
+            myTransform.Rotate(Vector3.forward, -90, Space.Self);
+        }
+    }
+
 
     void CheckMaxSpeed()
     {
