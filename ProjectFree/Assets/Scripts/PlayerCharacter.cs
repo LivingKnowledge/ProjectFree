@@ -114,7 +114,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleSlide()
     {
-        if (Input.GetKey("down") && !isSliding)
+        if( Input.GetButtonDown( "Slide" ) && !isSliding )
         {
 
             isSliding = true;
