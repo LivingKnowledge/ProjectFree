@@ -32,11 +32,12 @@ public class WallController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-	    if(!isClimbing)
+	    if(!isClimbing ^ Input.GetKeyDown(KeyCode.W))
         {
+ 
+            isClimbing = true;
             if(startTrigger.Grounded())
             {
-                isClimbing = true;
                 Vector3 playervel = player.GetPlayerVelocity();
                 Vector3 playerpos = player.GetPos();
 

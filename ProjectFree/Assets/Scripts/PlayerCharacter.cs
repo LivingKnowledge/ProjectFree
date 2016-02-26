@@ -141,6 +141,7 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
+
     public void HaultPhysicsBody()
     {
         myRigidBody.velocity = Vector3.zero;
@@ -171,7 +172,11 @@ public class PlayerCharacter : MonoBehaviour
         return climbSpeed;
     }
 
-    
-    
+    public bool GetinAir()
+    {
+        return inAir;
+    }
+
+
 
 }

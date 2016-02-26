@@ -4,7 +4,7 @@ using System.Collections;
 public class TriggerInfo : MonoBehaviour
 {
     public bool isGrounded = false;
-   
+    PlayerCharacter player;
 
     void FixedUpdate()
     {
@@ -26,8 +26,7 @@ public class TriggerInfo : MonoBehaviour
     void OnCollisionEnter()
     {
         //isGrounded = true;
-       
-     
+        
     }
 
     void OnCollisionExit()
