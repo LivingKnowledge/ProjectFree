@@ -9,10 +9,12 @@ public class VaultController : MonoBehaviour
 
     public Transform vaultStart;
     public Transform vaultEnd;
-    public Transform stumbleStart;
+    public Transform stumbleJumpTrans;
+    
 
     public TriggerInfo startTrigger;
     public StumbleTriggerInfo stumbleTrigger;
+    public StumblejumpTrigger stumbleJumpTrigger;
     public PlayerCharacter player;
 
     float mVaultSpeed = 1;
@@ -20,6 +22,7 @@ public class VaultController : MonoBehaviour
 
     public bool runningvault = false;
     public bool hasStumbled = false;
+    public bool runningStumbleVautl = false;
 
     //private static PlayerCharacter player;
     Rigidbody myRigidbody;
@@ -44,6 +47,7 @@ public class VaultController : MonoBehaviour
                 Vector3 playervel =  player.GetPlayerVelocity();
                 print("Players velocity into vault : " + playervel);
                 player.HaultPhysicsBody();
+                player.RestrictMovement( false );
 
                 Vector3 playerPos = player.GetPos();
 
@@ -61,7 +65,7 @@ public class VaultController : MonoBehaviour
                 float Y0 = mVaultSpeed - 2f;
                 float finalYvelforvault = (-(Y0 - Yf) + a) / timeforvault;
 
-                player.SetVelocity(new Vector3(playervel.x * player.GetVaultSpeed(), finalYvelforvault * vaultTime, playervel.z));
+                player.SetVelocity(new Vector3(playervel.x * player.GetVaultSpeed(), finalYvelforvault, playervel.z));
                
 
                 StartCoroutine(enumWaitTillFinishedVault(timeforvault));
@@ -80,13 +84,39 @@ public class VaultController : MonoBehaviour
                 //player.SetVelocity()
 
             }
-            
-            
+
+            if( hasStumbled && !stumbleJumpTrigger.isRunnStumbleVault() )
+            {
+                runningvault = true;
+                //runningStumbleVautl = true;
+                Vector3 playervel = player.GetPlayerVelocity();
+                print( "Players velocity into vault : " + playervel );
+                player.RestrictMovement( false );
+                player.HaultPhysicsBody();
+
+                Vector3 playerPos = player.GetPos();
 
 
+                float timeforvault = PhysicsUtilities.TimeToReachDistAtVel
+                    ( playerPos.x, stumbleJumpTrans.position.x, playervel.x );
+                print( "Time for vault distance : " + timeforvault );
+
+                //Yf = Y0 + Vo0(T) + (0.5f)(A)(T * T)
+                //Yf = Y0 + Vo0(T) + (0.5f)(A)(T)
+
+                float a = (0.5f) * (-9.8f) * (timeforvault * timeforvault);
+                float denom = 1f / timeforvault;
+                float Yf = vaultEnd.position.y;
+                float Y0 = mVaultSpeed - 2f;
+                float finalYvelforvault = (-(Y0 - Yf) + a) / timeforvault;
+
+                player.SetVelocity( new Vector3( playervel.x * player.GetVaultSpeed(), finalYvelforvault, playervel.z ) );
+
+
+                StartCoroutine( enumWaitTillFinishedVault( timeforvault ) );
+            }
         
-            
-           
+
             
 
     }

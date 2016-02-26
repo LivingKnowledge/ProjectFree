@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\PhysicsUtilities.cs" />
      <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
      <Compile Include="Assets\Scripts\StumbleTriggerInfo.cs" />
+     <Compile Include="Assets\Scripts\StumblejumpTrigger.cs" />
      <Compile Include="Assets\Scripts\TriggerInfo.cs" />
      <Compile Include="Assets\Scripts\VaultController.cs" />
      <Compile Include="Assets\Scripts\VaultManager.cs" />
