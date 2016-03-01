@@ -9,12 +9,12 @@ public class VaultController : MonoBehaviour
 
     public Transform vaultStart;
     public Transform vaultEnd;
+    public Transform stumblevaultend;
     public Transform stumbleJumpTrans;
     
 
     public TriggerInfo startTrigger;
     public StumbleTriggerInfo stumbleTrigger;
-    public StumblejumpTrigger stumbleJumpTrigger;
     public PlayerCharacter player;
 
     float mVaultSpeed = 1;
@@ -23,9 +23,10 @@ public class VaultController : MonoBehaviour
     public bool runningvault = false;
     public bool hasStumbled = false;
     public bool runningStumbleVautl = false;
+    public float vaultspeed = 5;
 
     //private static PlayerCharacter player;
-    Rigidbody myRigidbody;
+   
 
     public void Initialize(PlayerCharacter pl)
     {
@@ -46,14 +47,14 @@ public class VaultController : MonoBehaviour
                 runningvault = true;
                 Vector3 playervel =  player.GetPlayerVelocity();
                 print("Players velocity into vault : " + playervel);
-                player.HaultPhysicsBody();
+                //player.HaultPhysicsBody();
                 player.RestrictMovement( false );
 
                 Vector3 playerPos = player.GetPos();
 
 
                 float timeforvault = PhysicsUtilities.TimeToReachDistAtVel
-                    (playerPos.x, vaultStart.position.x, playervel.x);
+                    (playerPos.x, vaultEnd.position.x, playervel.x);
                 print("Time for vault distance : " + timeforvault);
 
                 //Yf = Y0 + Vo0(T) + (0.5f)(A)(T * T)
@@ -62,10 +63,10 @@ public class VaultController : MonoBehaviour
                 float a = (0.5f) * (-9.8f) * (timeforvault * timeforvault);
                 float denom = 1f / timeforvault;
                 float Yf = vaultEnd.position.y;
-                float Y0 = mVaultSpeed - 2f;
-                float finalYvelforvault = (-(Y0 - Yf) + a) / timeforvault;
+                float Y0 = playerPos.y - 2f;
+                float finalYvelforvault = -((Y0 - Yf) + a) / timeforvault;
 
-                player.SetVelocity(new Vector3(playervel.x * player.GetVaultSpeed(), finalYvelforvault, playervel.z));
+                player.SetVelocity(new Vector3(playervel.x , finalYvelforvault , playervel.z));
                
 
                 StartCoroutine(enumWaitTillFinishedVault(timeforvault));
@@ -85,35 +86,36 @@ public class VaultController : MonoBehaviour
 
             }
 
-            if( hasStumbled && !stumbleJumpTrigger.isRunnStumbleVault() )
+            if( hasStumbled && !stumbleTrigger.Stumble() )
             {
-                runningvault = true;
-                //runningStumbleVautl = true;
+                //if(!runningStumbleVautl)
+                //runningvault = true;
+                runningStumbleVautl = true;
                 Vector3 playervel = player.GetPlayerVelocity();
                 print( "Players velocity into vault : " + playervel );
                 player.RestrictMovement( false );
-                player.HaultPhysicsBody();
+                //player.HaultPhysicsBody();
 
                 Vector3 playerPos = player.GetPos();
 
 
                 float timeforvault = PhysicsUtilities.TimeToReachDistAtVel
-                    ( playerPos.x, stumbleJumpTrans.position.x, playervel.x );
+                    ( playerPos.x, stumblevaultend.position.x, vaultspeed + 1);
                 print( "Time for vault distance : " + timeforvault );
 
                 //Yf = Y0 + Vo0(T) + (0.5f)(A)(T * T)
                 //Yf = Y0 + Vo0(T) + (0.5f)(A)(T)
 
-                float a = (0.5f) * (-9.8f) * (timeforvault * timeforvault);
+                float a = (0.5f) * (-11.0f) * (timeforvault * timeforvault);
                 float denom = 1f / timeforvault;
-                float Yf = vaultEnd.position.y;
-                float Y0 = mVaultSpeed - 2f;
-                float finalYvelforvault = (-(Y0 - Yf) + a) / timeforvault;
+                float Yf = stumblevaultend.position.y;
+                float Y0 = playerPos.y - 2f;
+                float finalYvelforvault = -((Y0 - Yf) + a) / timeforvault;
 
-                player.SetVelocity( new Vector3( playervel.x * player.GetVaultSpeed(), finalYvelforvault, playervel.z ) );
+                player.SetVelocity( new Vector3(playervel.x, finalYvelforvault, playervel.z ) );
 
 
-                StartCoroutine( enumWaitTillFinishedVault( timeforvault ) );
+                StartCoroutine(enumWaitTillHasFinishedStumbled( timeforvault) );
             }
         
 
@@ -137,6 +139,7 @@ public class VaultController : MonoBehaviour
         print( "end stumble time" );
         player.RestrictMovement( true );
         hasStumbled = false;
+        runningStumbleVautl = false;
     }
 
    

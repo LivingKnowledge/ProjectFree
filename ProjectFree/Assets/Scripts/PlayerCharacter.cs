@@ -6,11 +6,8 @@ public class PlayerCharacter : MonoBehaviour
     public float moveSpeed;
     public float jumpForce;
     public float climbSpeed;
-    private float originalSpeed;
     public float vaultspeed;
     public float slidespeed;
-
-    float oldRot;
 
     private Rigidbody myRigidBody;
     public TriggerInfo vaultTrigger;
@@ -20,6 +17,7 @@ public class PlayerCharacter : MonoBehaviour
     public bool canMove = true;
     public bool inAir = false;
     public bool isSliding = false;
+    public bool isRunningVault = false;
 
 
     void OnCollisionEnter()
@@ -83,7 +81,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && !isSliding)
+        if (Input.GetButtonDown("Jump") && !isSliding && !isRunningVault)
         {
             myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
@@ -99,6 +97,7 @@ public class PlayerCharacter : MonoBehaviour
             myRigidBody.velocity = new Vector3(0, -slidespeed, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
                 myRigidBody.velocity.y * Time.deltaTime, 0));
+            
         }
 
 
@@ -119,6 +118,7 @@ public class PlayerCharacter : MonoBehaviour
 
             isSliding = true;
             myTransform.Rotate(Vector3.forward, 90, Space.Self);
+            myRigidBody.useGravity = false;
         }
     }
 
@@ -128,6 +128,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             isSliding = false;
             myTransform.Rotate(Vector3.forward, -90, Space.Self);
+            myRigidBody.useGravity = true;
         }
     }
 
@@ -177,6 +178,15 @@ public class PlayerCharacter : MonoBehaviour
         return inAir;
     }
 
+    public bool GetRunnVault()
+    {
+        return isRunningVault;
+    }
+
+    public void SetRunnVault(bool on)
+    {
+        isRunningVault = on;
+    }
 
 
 }
