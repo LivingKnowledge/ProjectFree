@@ -17,7 +17,6 @@ public class PlayerCharacter : MonoBehaviour
     public bool canMove = true;
     public bool inAir = false;
     public bool isSliding = false;
-    public bool isRunningVault = false;
 
 
     void OnCollisionEnter()
@@ -27,15 +26,18 @@ public class PlayerCharacter : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(canMove)
+        {
+            CheckMaxSpeed();
 
-       CheckMaxSpeed();
+        }
         
        if(canMove)
        {
            HandleSpeed();
        }
 
-       if (canMove == true && !inAir)
+       if (canMove && !inAir)
        {
            HandleJumping();
 
@@ -81,7 +83,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && !isSliding && !isRunningVault)
+        if (Input.GetButtonDown("Jump") && !isSliding && canMove)
         {
             myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
@@ -101,7 +103,7 @@ public class PlayerCharacter : MonoBehaviour
         }
 
 
-        if (!isSliding)
+        if (!isSliding && canMove)
         {
             myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
@@ -163,6 +165,11 @@ public class PlayerCharacter : MonoBehaviour
         myRigidBody.velocity = vel;
     }
 
+    public void SetMoveSpeed(float sp)
+    {
+        moveSpeed = sp;
+    }
+
     public float GetVaultSpeed()
     {
         return vaultspeed;
@@ -178,15 +185,6 @@ public class PlayerCharacter : MonoBehaviour
         return inAir;
     }
 
-    public bool GetRunnVault()
-    {
-        return isRunningVault;
-    }
-
-    public void SetRunnVault(bool on)
-    {
-        isRunningVault = on;
-    }
 
 
 }

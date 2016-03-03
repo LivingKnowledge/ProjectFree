@@ -32,25 +32,27 @@ public class WallController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-	    if(!isClimbing ^ Input.GetKeyDown(KeyCode.W))
+        if(!isClimbing && startTrigger.Grounded())
         {
- 
-            isClimbing = true;
-            if(startTrigger.Grounded())
+	    if(Input.GetButtonDown("Climb"))
+        //if(startTrigger.Grounded())
             {
+                isClimbing = true;
                 Vector3 playervel = player.GetPlayerVelocity();
                 Vector3 playerpos = player.GetPos();
+                float climbspeed = player.GetClimbSpeed();
 
                 player.RestrictMovement(false);
-                player.HaultPhysicsBody();
+                //player.HaultPhysicsBody();
 
                 timeForclimb = PhysicsUtilities.TimeToReachDistAtVel
-                   (playerpos.x, endpoint.position.y, player.GetClimbSpeed());
+                   (playerpos.y,endpoint.position.y, climbspeed);
+                print("Time for cliimb distance : " + timeForclimb);
 
-                player.SetVelocity( new Vector3(0, player.GetClimbSpeed() ,playervel.z ) );
+                player.SetVelocity( new Vector3(0, climbspeed, playervel.z ) );
 
 
-                StartCoroutine( enumWaitTillFinishedWallClimb( timeForclimb ) );
+                StartCoroutine( enumWaitTillFinishedWallClimb( timeForclimb) );
 
             }
         }
@@ -64,6 +66,7 @@ public class WallController : MonoBehaviour
         print( "start wait" );
         yield return new WaitForSeconds( time + 0.5f );
         print( "end wait" );
+        player.SetMoveSpeed(2.0f);
         player.RestrictMovement( true );
         isClimbing = false;
     }
