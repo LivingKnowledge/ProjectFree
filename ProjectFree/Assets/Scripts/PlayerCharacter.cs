@@ -9,6 +9,7 @@ public class PlayerCharacter : MonoBehaviour
     public float vaultspeed;
     public float slidespeed;
 
+    private Animator myanim;
     private Rigidbody myRigidBody;
     public TriggerInfo vaultTrigger;
     public TriggerInfo wallTrigger;
@@ -59,6 +60,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         myRigidBody = GetComponent<Rigidbody>();
         myTransform = GetComponent<Transform>();
+        myanim = GetComponent<Animator>();   
     }
 
 
@@ -108,6 +110,9 @@ public class PlayerCharacter : MonoBehaviour
             myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
                 myRigidBody.velocity.y * Time.deltaTime, 0));
+
+            myanim.SetFloat( "Speed", myRigidBody.velocity.x );
+            myanim.speed = 3.0f;
 
         }
 
