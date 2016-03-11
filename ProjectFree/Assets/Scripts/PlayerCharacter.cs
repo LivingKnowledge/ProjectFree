@@ -107,11 +107,11 @@ public class PlayerCharacter : MonoBehaviour
 
         if (!isSliding && canMove)
         {
-            myRigidBody.velocity = new Vector3(moveSpeed, myRigidBody.velocity.y, 0);
-            myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
-                myRigidBody.velocity.y * Time.deltaTime, 0));
+            myRigidBody.velocity = new Vector3(0, myRigidBody.velocity.y, moveSpeed);
+            myTransform.Translate(new Vector3(0,
+                myRigidBody.velocity.y * Time.deltaTime, myRigidBody.velocity.z * Time.deltaTime));
 
-            myanim.SetFloat( "Speed", myRigidBody.velocity.x );
+            myanim.SetFloat( "Speed", myRigidBody.velocity.z );
             myanim.speed = 3.0f;
 
         }
@@ -124,7 +124,7 @@ public class PlayerCharacter : MonoBehaviour
         {
 
             isSliding = true;
-            myTransform.Rotate(Vector3.forward, 90, Space.Self);
+            myTransform.Rotate(Vector3.right, -90, Space.Self);
             myRigidBody.useGravity = false;
         }
     }
@@ -134,7 +134,7 @@ public class PlayerCharacter : MonoBehaviour
         if (Input.GetButtonDown("unSlide") && isSliding)
         {
             isSliding = false;
-            myTransform.Rotate(Vector3.forward, -90, Space.Self);
+            myTransform.Rotate(Vector3.right, 90, Space.Self);
             myRigidBody.useGravity = true;
         }
     }
