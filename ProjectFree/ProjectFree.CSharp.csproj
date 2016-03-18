@@ -57,12 +57,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -93,14 +87,20 @@
     <Compile Include="Assets\Scripts\CharacterAnimator.cs" />
     <Compile Include="Assets\Scripts\PhysicsUtilities.cs" />
     <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
+    <Compile Include="Assets\Scripts\SlideController.cs" />
+    <Compile Include="Assets\Scripts\SlideManager.cs" />
+    <Compile Include="Assets\Scripts\SlidingTriggerInfo.cs" />
     <Compile Include="Assets\Scripts\StumbleTriggerInfo.cs" />
     <Compile Include="Assets\Scripts\TriggerInfo.cs" />
     <Compile Include="Assets\Scripts\VaultController.cs" />
     <Compile Include="Assets\Scripts\VaultManager.cs" />
     <Compile Include="Assets\Scripts\WallController.cs" />
     <Compile Include="Assets\Scripts\WallManager.cs" />
+    <Compile Include="Assets\Scripts\WallTriggerInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Animations\Animations\Interacting\Animation Times\PK_Acro.txt" />
+    <None Include="Assets\Animations\Animations\_CompleteAnimationList.txt" />
     <None Include="Assets\City Props Pack\Readme.txt" />
     <None Include="Assets\Raw Mocap Data\Animations\Interacting\Animation Times\PK_Acro.txt" />
     <None Include="Assets\Raw Mocap Data\Animations\_CompleteAnimationList.txt" />

@@ -7,22 +7,37 @@ public class PlayerCharacter : MonoBehaviour
     public float jumpForce;
     public float climbSpeed;
     public float vaultspeed;
-    public float slidespeed;
+    float slidespeed;
+    float orgianlCapheight;
+    Vector3 orginalCapcenter;
 
     private Animator myanim;
     private Rigidbody myRigidBody;
-    public TriggerInfo vaultTrigger;
-    public TriggerInfo wallTrigger;
     Transform myTransform;
+    CapsuleCollider myCapsule;
+    public WallTriggerInfo walltrigg;
 
     public bool canMove = true;
     public bool inAir = false;
     public bool isSliding = false;
+    public bool isClimbing = false;
 
 
     void OnCollisionEnter()
     {
         inAir = false;
+        myanim.SetBool("InAir", inAir);
+        //canMove = true;
+
+        
+        myanim.SetBool("InAir", inAir);
+
+    }
+
+    void OnCollisionExit()
+    {
+        //isClimbing = false;
+        //myanim.SetBool("canClimb", isClimbing);
     }
 
     void FixedUpdate()
@@ -44,15 +59,7 @@ public class PlayerCharacter : MonoBehaviour
 
        }
 
-        if (!isSliding && !inAir)
-        {
-            HandleSlide();
-        }
 
-        if (isSliding && !inAir)
-        {
-            HandleunSlide();
-        }
 
     }
 
@@ -60,7 +67,12 @@ public class PlayerCharacter : MonoBehaviour
     {
         myRigidBody = GetComponent<Rigidbody>();
         myTransform = GetComponent<Transform>();
-        myanim = GetComponent<Animator>();   
+        myanim = GetComponent<Animator>();
+        myCapsule = GetComponent<CapsuleCollider>();
+
+        orgianlCapheight = myCapsule.height;
+        orginalCapcenter = myCapsule.center;
+
     }
 
 
@@ -73,7 +85,11 @@ public class PlayerCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (walltrigg.Climb())
+        {
 
+            HandleWallClimb();
+        }
 
     }
 
@@ -85,27 +101,25 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleJumping()
     {
-        if (Input.GetButtonDown("Jump") && !isSliding && canMove)
+        if (Input.GetButtonDown("Jump") && !inAir)
         {
             myRigidBody.velocity = new Vector3(myRigidBody.velocity.x, jumpForce, 0);
             myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime, 
                 myRigidBody.velocity.y * Time.deltaTime, 0));
             inAir = true;
+            //canMove = false;
+
+            myanim.SetBool("InAir", inAir);
+            myanim.speed = 3.0f;
+
+            //myanim.SetFloat("Jumpforce", myRigidBody.velocity.y);
+            //myanim.speed = 3.0f;
         }
     }
 
     void HandleSpeed()
     {
-        if (isSliding)
-        {
-            myRigidBody.velocity = new Vector3(0, -slidespeed, 0);
-            myTransform.Translate(new Vector3(myRigidBody.velocity.x * Time.deltaTime,
-                myRigidBody.velocity.y * Time.deltaTime, 0));
-            
-        }
-
-
-        if (!isSliding && canMove)
+        if (canMove)
         {
             myRigidBody.velocity = new Vector3(0, myRigidBody.velocity.y, moveSpeed);
             myTransform.Translate(new Vector3(0,
@@ -118,27 +132,19 @@ public class PlayerCharacter : MonoBehaviour
 
     }
 
-    void HandleSlide()
+    void HandleWallClimb()
     {
-        if( Input.GetButtonDown( "Slide" ) && !isSliding )
+        if (Input.GetButton("Climb"))
         {
+            //isClimbing = true;
+            myRigidBody.velocity = new Vector3(0, climbSpeed, 0);
+            myTransform.Translate(new Vector3(0,
+                myRigidBody.velocity.y * Time.deltaTime, 0));
 
-            isSliding = true;
-            myTransform.Rotate(Vector3.right, -90, Space.Self);
-            myRigidBody.useGravity = false;
+            myanim.SetBool("canClimb", walltrigg.Climb());
+            myanim.speed = 3.0f;
         }
     }
-
-    void HandleunSlide()
-    {
-        if (Input.GetButtonDown("unSlide") && isSliding)
-        {
-            isSliding = false;
-            myTransform.Rotate(Vector3.right, 90, Space.Self);
-            myRigidBody.useGravity = true;
-        }
-    }
-
 
     void CheckMaxSpeed()
     {
